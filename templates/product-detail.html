@@ -33,17 +33,7 @@
 							</div>
 						</div>
 
-						<div class="item-slick3" data-thumb="{% static 'images/product-detail2.jpg' %}">
-							<div class="wrap-pic-w">
-								<img src="{% static 'images/product-detail2.jpg' %}" alt="IMG-PRODUCT">
-							</div>
-						</div>
-
-						<div class="item-slick3" data-thumb="{% static 'images/product-detail3.jpg' %}">
-							<div class="wrap-pic-w">
-								<img src="{% static 'images/product-detail3.jpg' %}" alt="IMG-PRODUCT">
-							</div>
-						</div>
+						
 					</div>
 				</div>
 			</div>
@@ -56,15 +46,15 @@
 				
 				{% if object.discount_price %}
 								<span class="block2-oldprice m-text7 p-r-5" style="font-size: 1.5rem;">
-									${{ object.price }}
+									₹{{ object.price }}
 								</span>
 
 								<span class="block2-newprice m-text8 p-r-5" style="font-size: 1.5rem;">
-									${{ object.discount_price }}
+									₹{{ object.discount_price }}
 								</span>
 								{% else %}
 								<span class="m-text17">
-									${{object.price}}
+									₹{{object.price}}
 								</span>
 								{% endif %}
 
@@ -73,7 +63,7 @@
 				</p>
 
 				<!--  -->
-				<div class="p-t-33 p-b-60">
+				{% comment %} <div class="p-t-33 p-b-60">
 					<div class="flex-m flex-w p-b-10">
 						<div class="s-text15 w-size15 t-center">
 							Size
@@ -131,7 +121,7 @@
 							<a href="{{object.get_remove_from_cart_url}}" class="btn btn-outline-dark" style="margin: 2px;">Remove from Cart</a>
 						</div>
 					</div>
-				</div>
+				</div> {% endcomment %}
 				<br>
 				<div class="p-b-45">
 					<span class="s-text8 m-r-35">SKU: {{ object.stock_no }}</span>
@@ -162,7 +152,7 @@
 
 					<div class="dropdown-content dis-none p-t-15 p-b-23">
 						<p class="s-text8">
-							Fusce ornare mi vel risus porttitor dignissim. Nunc eget risus at ipsum blandit ornare vel sed velit. Proin gravida arcu nisl, a dignissim mauris placerat
+							
 						</p>
 					</div>
 				</div>
@@ -176,7 +166,7 @@
 
 					<div class="dropdown-content dis-none p-t-15 p-b-23">
 						<p class="s-text8">
-							Fusce ornare mi vel risus porttitor dignissim. Nunc eget risus at ipsum blandit ornare vel sed velit. Proin gravida arcu nisl, a dignissim mauris placerat
+							
 						</p>
 					</div>
 				</div>
@@ -186,7 +176,7 @@
 
 
 	<!-- Relate Product -->
-	<section class="relateproduct bgwhite p-t-45 p-b-138">
+	{% comment %} <section class="relateproduct bgwhite p-t-45 p-b-138">
 		<div class="container">
 			<div class="sec-title p-b-60">
 				<h3 class="m-text5 t-center">
@@ -473,7 +463,7 @@
 			</div>
 
 		</div>
-	</section>
+	</section> {% endcomment %}
 
 
 	<!-- Footer -->
