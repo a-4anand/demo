@@ -1,1 +1,2 @@
-web: gunicorn demo.wsgi:application --bind 0.0.0.0:$PORT
+web: gunicorn demo.wsgi --bind 0.0.0.0:8080
+
