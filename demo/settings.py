@@ -8,7 +8,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = True
 
 SECRET_KEY = '-05sgp9!deq=q1nltm@^^2cc+v29i(tyybv3v2t77qi66czazj'
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -28,7 +29,6 @@ INSTALLED_APPS = [
     'django_countries',
     'core',
     'market'
-
 ]
 
 MIDDLEWARE = [
