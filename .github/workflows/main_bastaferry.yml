@@ -23,6 +23,12 @@ jobs:
       - name: Create and start virtual environment
         run: |
           python -m venv venv
+          if [ -d "venv/bin" ]; then
+            echo "Virtual environment created successfully."
+          else
+            echo "Failed to create virtual environment."
+            exit 1
+          fi
           . venv/bin/activate  # Using . instead of source for compatibility
           ls -la venv/bin  # Verify virtual environment creation
 
