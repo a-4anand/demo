@@ -1,3 +1,7 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+# More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
+
 name: Build and deploy Python app to Azure Web App - bastaferry
 
 on:
@@ -10,41 +14,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: read #This is required for actions/checkout
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Print current directory
-        run: pwd
-
-      - name: List directory contents
-        run: ls -la
-
       - name: Set up Python version
         uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
-
-      - name: Verify Python version
-        run: python --version
+          python-version: '3.11'
 
       - name: Create and start virtual environment
         run: |
           python -m venv venv
-          if [ -d "venv/bin" ]; then
-            echo "Virtual environment created successfully."
-          else
-            echo "Failed to create virtual environment."
-            exit 1
-          fi
-          . venv/bin/activate
-          ls -la venv/bin
-
+          source venv/bin/activate
+      
       - name: Install dependencies
-        run: |
-          . venv/bin/activate
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
+        
+      # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
@@ -64,8 +52,8 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write
-      contents: read
+      id-token: write #This is required for requesting the JWT
+      contents: read #This is required for actions/checkout
 
     steps:
       - name: Download artifact from build job
@@ -76,12 +64,13 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
+      
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_942121EE2D3E46E09A703AF722920B79 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_EACAD066AA1C47EA890C09B52F93C2C8 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_88C525DDE08C44DF9F9B0039AA8321B1 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_8A54E155E8DD41029CF31A3E0D676B75 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_BC17779DEB15411AA8066EEC1CF35756 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_210A8F4B740F45888663D4A1F47A4CC3 }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
@@ -89,3 +78,4 @@ jobs:
         with:
           app-name: 'bastaferry'
           slot-name: 'Production'
+          
