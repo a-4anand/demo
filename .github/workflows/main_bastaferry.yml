@@ -10,15 +10,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read 
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Print current directory
+        run: pwd
+
+      - name: List directory contents
+        run: ls -la
 
       - name: Set up Python version
         uses: actions/setup-python@v5
         with:
           python-version: '3.9'
+
+      - name: Verify Python version
+        run: python --version
 
       - name: Create and start virtual environment
         run: |
@@ -29,12 +38,12 @@ jobs:
             echo "Failed to create virtual environment."
             exit 1
           fi
-          . venv/bin/activate  # Using . instead of source for compatibility
-          ls -la venv/bin  # Verify virtual environment creation
+          . venv/bin/activate
+          ls -la venv/bin
 
       - name: Install dependencies
         run: |
-          . venv/bin/activate  # Ensure the virtual environment is activated
+          . venv/bin/activate
           pip install -r requirements.txt
 
       - name: Zip artifact for deployment
@@ -55,8 +64,8 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write 
-      contents: read 
+      id-token: write
+      contents: read
 
     steps:
       - name: Download artifact from build job
