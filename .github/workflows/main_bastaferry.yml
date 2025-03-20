@@ -1,81 +1,85 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-# More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
+name: Build and deploy Python appProjectBastaFerry/ProjectBastaFerry/venv/bin/python`. This indicates that the virtual environment might not to Azure Web App - bastaferry
 
-name: Build and deploy Python app to Azure Web App - bastaferry
+on:
+  push:
+    branches have been created or the path is incorrect.
+
+Here:
+      - main
+  workflow_dispatch:
+
+jobs:
+ are the steps to resolve this issue:
+
+1. **Ensure the  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read #This is required for actions/ virtual environment is created:**
+   Make sure thatcheckout
+
+    steps:
+      - uses: actions/checkout@ the virtual environment is being created before itv4
+
+      - name: Set up Python version
+        uses: actions/setup-python@v5
+        with:
+          python-version is used. You can add a step to create the virtual environment: '3.9'
+
+      - name: Create and start virtual environment using `python -m venv venv`.
+
+2. **Check the path to the virtual environment:**
+   Verify the path to the Python executable in the virtual environment
+        run: |
+          python -m venv venv
+          if [ -d "venv/bin" ]; then
+            source venv/bin/activate
+          else
+            echo. The path might be different depending on how the environment "Virtual environment directory not found!"
+            exit is set up.
+
+Here is an updated workflow 1
+          fi
+      
+      - name: Install dependencies
+ configuration that includes the steps to create and activate        run: |
+          source venv/bin/activate
+ the virtual environment:
+
+```yaml
+name: Build          pip install -r requirements.txt
+          
+      and deploy Python app to Azure Web App - bastaferry # Optional: Add step to run tests here (PyTest,
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
+  pull_request:
+ Django test suites, etc.)
+
+      - name: Zip artifact for    branches:
+      - main
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read #This is required for actions/checkout
+    runs-on deployment
+        run: zip release.zip ./* -r: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python version
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.9'
-
-      - name: Create and start virtual environment
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-      
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-        
-      # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
-
-      - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+    - name: Check out the
 
       - name: Upload artifact for deployment jobs
-        uses: actions/upload-artifact@v4
+ repository
+      uses: actions/checkout@v2
+
+    -        uses: actions/upload-artifact@v4
         with:
-          name: python-app
+ name: Set up Python
+      uses: actions/setup-python@          name: python-app
           path: |
-            release.zip
+            releasev2
+      with:
+        python-version: '3.9'
+
+    -.zip
             !venv/
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: python-app
-
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
-
-      
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_942121EE2D3E46E09A703AF722920B79 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_EACAD066AA1C47EA890C09B52F93C2C8 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_88C525DDE08C44DF9F9B0039AA8321B1 }}
-
-      - name: 'Deploy to Azure Web App'
-        uses: azure/webapps-deploy@v3
-        id: deploy-to-webapp
-        with:
-          app-name: 'bastaferry'
-          slot-name: 'Production'
-          
