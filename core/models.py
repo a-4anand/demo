@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models import Sum
 from django.shortcuts import reverse
 from django_countries.fields import CountryField
+from core.models import Payment
 
 # Create your models here.
 CATEGORY_CHOICES = (
@@ -127,6 +128,7 @@ class Order(models.Model):
     received = models.BooleanField(default=False)
     refund_requested = models.BooleanField(default=False)
     refund_granted = models.BooleanField(default=False)
+    payment = models.ForeignKey('core.Payment', on_delete=models.CASCADE)
 
     '''
     1. Item added to cart
@@ -167,15 +169,6 @@ class BillingAddress(models.Model):
         verbose_name_plural = 'BillingAddresses'
 
 
-class Payment(models.Model):
-    stripe_charge_id = models.CharField(max_length=50)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             on_delete=models.SET_NULL, blank=True, null=True)
-    amount = models.FloatField()
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.user.username
 
 
 class Coupon(models.Model):
@@ -194,3 +187,14 @@ class Refund(models.Model):
 
     def __str__(self):
         return f"{self.pk}"
+    
+class Payment(models.Model):
+    order_id = models.CharField(max_length=100)
+    payment_id = models.CharField(max_length=100)
+    signature = models.TextField()
+    amount = models.FloatField()
+    status = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.payment_id} - {self.status}"

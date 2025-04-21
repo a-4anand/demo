@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'django_countries',
-    'core'
+    'core',
+    'Payment',
 ]
 
 MIDDLEWARE = [
@@ -123,4 +124,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 STRIPE_PUBLIC_KEY = 'pk_test_lX3r6OMjOU2yzFsNSHq6belT00EY82kZmH'
 STRIPE_SECRET_KEY = 'sk_test_tn0CTDaIJHUJyAqhsf39cfsC00LNjsqDnb'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+RAZORPAY_KEY_ID = "rzp_live_YNQlMgOGC9OKW3"
+RAZORPAY_KEY_SECRET = "lZsovOlQ4q5SxWs844juVRVz"
 

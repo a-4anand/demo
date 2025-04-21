@@ -9,22 +9,98 @@ from django.shortcuts import redirect
 from django.utils import timezone
 from .forms import CheckoutForm, CouponForm, RefundForm
 from .models import Item, OrderItem, Order, BillingAddress, Payment, Coupon, Refund, Category
-from django.http import HttpResponseRedirect
 from django.utils.encoding import force_str
-
-
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import razorpay
+import json
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
+from core.models import Payment
 
 
 # Create your views here.
 import random
 import string
-import stripe
-stripe.api_key = settings.STRIPE_SECRET_KEY
+client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
 
 
 def create_ref_code():
     return ''.join(random.choices(string.ascii_lowercase + string.digits, k=20))
+
+def payment_page(request):
+    return render(request, 'payment.html', {'key_id': settings.RAZORPAY_KEY_ID})
+
+@csrf_exempt
+def create_order(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        amount = data['amount'] * 100  # Razorpay takes amount in paisa
+
+        payment = client.order.create({
+            "amount": amount,
+            "currency": "INR",
+            "payment_capture": 1
+        })
+
+        return JsonResponse(payment)
+    
+@csrf_exempt
+def verify_payment(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        try:
+            params_dict = {
+                'razorpay_order_id': data['razorpay_order_id'],
+                'razorpay_payment_id': data['razorpay_payment_id'],
+                'razorpay_signature': data['razorpay_signature']
+            }
+
+            # Verify the payment signature
+            client.utility.verify_payment_signature(params_dict)
+
+            # Optional: Save the payment in DB (model example below)
+            # Payment.objects.create(
+            #     order_id=params_dict['razorpay_order_id'],
+            #     payment_id=params_dict['razorpay_payment_id'],
+            #     signature=params_dict['razorpay_signature'],
+            #     amount=data.get('amount', 0),
+            #     status='Success'
+            # )
+
+            return JsonResponse({'status': 'Payment verified successfully'})
+        except razorpay.errors.SignatureVerificationError:
+            return HttpResponseBadRequest('Invalid Signature')
+        
+@csrf_exempt
+def razorpay_confirm(request):
+    if request.method == 'POST':
+        import json
+        data = json.loads(request.body)
+        payment_id = data.get("payment_id")
+
+        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+
+        try:
+            # Capture payment (optional if auto-capture is on)
+            client.payment.capture(payment_id, amount)  # amount in paise
+
+            # Save to your DB if needed
+
+            return JsonResponse({"status": "success"})
+        except:
+            return JsonResponse({"status": "fail"})
+        
+def payment_page(request):
+    context = {
+        'razorpay_key_id': settings.RAZORPAY_KEY_ID,
+        'razorpay_amount': 50000,  # In paise
+        'card': user_card_data_if_any,
+    }
+    return render(request, 'payment_page.html', context)
+
+
 
 
 class PaymentView(View):
