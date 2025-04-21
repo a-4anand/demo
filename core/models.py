@@ -3,7 +3,8 @@ from django.db import models
 from django.db.models import Sum
 from django.shortcuts import reverse
 from django_countries.fields import CountryField
-from core.models import Payment
+from django.utils import timezone
+
 
 # Create your models here.
 CATEGORY_CHOICES = (
@@ -189,12 +190,13 @@ class Refund(models.Model):
         return f"{self.pk}"
     
 class Payment(models.Model):
-    order_id = models.CharField(max_length=100)
-    payment_id = models.CharField(max_length=100)
-    signature = models.TextField()
+    order_id = models.CharField(max_length=255, default='default_order')
+    payment_id = models.CharField(max_length=255, default='default_payment_id')
+    signature = models.CharField(max_length=255, default='default_signature')
     amount = models.FloatField()
-    status = models.CharField(max_length=50)
-    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=50)  
+    created_at = models.DateTimeField(default=timezone.now)
+    payment = models.CharField(max_length=255, default='default_payment_value')
 
     def __str__(self):
         return f"{self.payment_id} - {self.status}"

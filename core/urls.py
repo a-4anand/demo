@@ -14,6 +14,7 @@ from .views import (
     CategoryView
 )
 from . import views
+from .views import AddCouponView
 
 app_name = 'core'
 
